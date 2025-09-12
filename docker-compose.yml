@@ -1,0 +1,13 @@
+services:
+  ogameanalytics.api:
+    image: ${DOCKER_REGISTRY-}ogameanalyticsapi
+    build:
+      context: .
+      dockerfile: src/OgameAnalytics.API/Dockerfile
+
+  ogameanalytics.frontend:
+    image: ${DOCKER_REGISTRY-}ogameanalyticsfrontend
+    build:
+      context: .
+      dockerfile: src/OgameAnalytics.Frontend/Dockerfile
+

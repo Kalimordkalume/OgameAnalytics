@@ -1,0 +1,89 @@
+﻿@* @using OgameAnalytics.Frontend.Models
+@using OgameAnalytics.Frontend.Services
+@page "/building-calculator"
+@rendermode InteractiveServer
+@inject BuildingCostApiService BuildingCostService
+
+<h3>Building Upgrade Cost Calculator</h3>
+
+<div>
+    <label>Building Type:</label>
+    <select @bind="Request.BuildingType">
+        <option value="1">Metal Mine</option>
+        <option value="2">Crystal Mine</option>
+        <option value="3">Deuterium Synthesizer</option>
+        <option value="4">Solar Plant</option>
+        <option value="5">Fusion Reactor</option>
+        <option value="6">Metal Storage</option>
+        <option value="7">Crystal Storage</option>
+        <option value="8">Deuterium Tank</option>
+        <option value="9">Terraformer</option>
+    </select>
+</div>
+
+<div>
+    <label>Level:</label>
+    <input type="number" @bind="Request.Level" min="1" />
+</div>
+
+<button @onclick="async () => await CalculateCost()" disabled="@IsLoading">
+    @(IsLoading ? "Calculating..." : "Calculate")
+</button>
+
+@if (!string.IsNullOrEmpty(ErrorMessage))
+{
+    <p style="color:red">@ErrorMessage</p>
+}
+
+@if (Result is not null)
+{
+    <h4>Cost Result:</h4>
+    <ul>
+        <li>Metal: @Result.ResourceCost.Metal</li>
+        <li>Crystal: @Result.ResourceCost.Crystal</li>
+        <li>Deuterium: @Result.ResourceCost.Deuterium</li>
+        <li>Energy: @Result.ResourceCost.Energy</li>
+    </ul>
+}
+
+@code {
+    private CalculateBuildingUpgradeCostRequest Request = new() { BuildingType = 1, Level = 0 };
+    private CalculateBuildingUpgradeCostResponse? Result;
+    private bool IsLoading = false;
+    private string ErrorMessage = string.Empty;
+    private bool Clicked = false;
+
+    private async Task CalculateCost()
+    {
+        Clicked = true; // Para probar que se ejecuta el click
+        ErrorMessage = string.Empty;
+        Result = null;
+        IsLoading = true;
+
+        try
+        {
+            if (Request.Level < 0)
+            {
+                ErrorMessage = "Level must be at least 0.";
+                return;
+            }
+
+            Result = await BuildingCostService.CalculateUpgradeCostAsync(Request);
+
+            if (Result == null)
+            {
+                ErrorMessage = "No result from API.";
+            }
+        }
+        catch (Exception ex)
+        {
+            ErrorMessage = $"Error calculating cost: {ex.Message}";
+        }
+        finally
+        {
+            IsLoading = false;
+            StateHasChanged();
+        }
+    }
+}
+ *@

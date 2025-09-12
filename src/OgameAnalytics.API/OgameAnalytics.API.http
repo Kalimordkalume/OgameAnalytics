@@ -1,0 +1,6 @@
+@OgameAnalytics.API_HostAddress = http://localhost:5001
+
+GET {{OgameAnalytics.API_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
