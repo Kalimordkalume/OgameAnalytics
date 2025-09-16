@@ -1,0 +1,11 @@
+- Visual Studio 2022.
+- SQL Server Management Studio (SSMS) 2021.
+- Docker Desktop.
+- Git y GitHub.
+- .NET 9.0 SDK.
+
+-- Librerías --
+Microsoft.EntityFrameworkCore.SqlServer
+Microsoft.EntityFrameworkCore.Tools
+Scalar.AspNetCore
+
